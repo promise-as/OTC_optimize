@@ -1,0 +1,113 @@
+var app = new Vue({
+  el: '#app',
+  data: {
+    /*支付USDT-数据*/
+    logoText: '全球领先的数字资产兑换平台',
+    logoTextEn: 'The world\'s leading digital asset exchange platform',
+    phoneNumber: '020-253 2564',
+    vendorName: '商家1', // 商户名称
+    USDTNumber: '46.33 USDT / ¥314.1', // USDT数量
+    isShowSkip: false, // 跳转至 USDT购买 页面
+    clientInfo: 'lavender', // 客户信息
+    payOrder: 'WIRES0022020209901', // 支付单号
+
+    orderError: false, // 订单错误提示
+    // 提示文本
+    remitText: [
+      {
+        key: 0,
+        value: '[10551] 您提交的次数有点多，请您休息一会儿~'
+      },
+      {
+        key: 1,
+        value: '[10552] 您提交的订单信息有误'
+      },
+      {
+        key: 2,
+        value: '[10553] 您提交的订单参数错误'
+      },
+    ],
+    payUSDT: '支付USDT',
+    payUSDTEn: 'Pay USDT',
+
+    /*购买USDT-数据*/
+    buyUSDT: '购买USDT',
+    buyUSDTEn: 'Buy USDT',
+    payAmount: '6000.00', // 支付金额
+    payName: '',
+
+    /*收银台-数据*/
+    payment: ['银行转账', '支付宝扫码', '微信扫码'],
+    paymentEn: ['Bank Transfer', 'Alipay', 'Wechat Pay'],
+    paymentIndex: 0,
+    username: '李四',
+    bankInfo: '招商银行深圳车公庙支行',
+    bankAccount: '6222 0000 0000 0000 000',
+    TransferNoteCode: '897524',
+    bankTypes: ['ICBC', 'CCB', 'BOC', 'CMB', 'ABC', 'Bocom'],
+
+    isRemind: false,
+    haveTransfer: false, // 已转账
+    notTransfer: false,  // 未转账
+    selectedBankIndex: 0,  // 选中银行的下标
+
+    operatorName: '车国秀',
+    ServiceTimes: '1000',
+    AverageTotalAffirmTime: '00:05:00',
+
+    countdown: true, // 倒计时中
+    overtime: false, // 支付已超时
+    HasRemind: false, // 已提醒服务商收款
+
+    isShowFacilitatorMsg: false, // 服务商信息显示和隐藏
+    isShowProgressOrder: false, // 服务商信息显示和隐藏
+
+    isShowInProgressOrder: false, // 是否显示移动端进行中的订单
+
+    /*提交次数多*/
+    moreSubmit: true,
+  },
+
+  methods: {
+    tabHead: function (index) {
+      this.paymentIndex = index
+    },
+
+
+    // 提示
+    isHasPayer: function () {
+      if (!this.goldenSum && !this.payerName) {
+        dialog(this, '请输入支付的金额或者付款人姓名')
+      }
+    },
+    // 已转账
+    haveTransferHandle: function () {
+      this.isRemind = true
+      this.haveTransfer = true
+    },
+    // 未转账
+    notTransferHandle: function () {
+      this.isRemind = true
+      this.notTransfer = true
+    },
+    // 关闭提醒
+    closeRemind: function () {
+      this.isRemind = false
+    },
+    // 选中的银行
+    selectedBank: function (index) {
+      // console.log(index, bank)
+      this.selectedBankIndex = index
+    },
+
+    // 服务商信息显示和隐藏
+    showFacilitatorMsg: function () {
+      this.isShowFacilitatorMsg = !this.isShowFacilitatorMsg
+    },
+
+    // 服务商信息显示和隐藏
+    showProgressOrder: function () {
+      this.isShowProgressOrder = !this.isShowProgressOrder
+    }
+  },
+})
