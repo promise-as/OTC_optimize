@@ -11,7 +11,7 @@ var app = new Vue({
     clientInfo: 'lavender', // 客户信息
     payOrder: 'WIRES0022020209901', // 支付单号
 
-    orderError: false, // 订单错误提示
+    orderError: true, // 订单错误提示
     // 提示文本
     remitText: [
       {
