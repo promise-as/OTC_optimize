@@ -208,8 +208,6 @@ li {
           justify-content: flex-start;
 }
 .merchant-header .header-content .already-gathering {
-  width: 160px;
-  height: 30px;
   float: right;
 }
 .merchant-header .header-content .already-gathering .countdown-icon {
@@ -883,11 +881,10 @@ li {
   height: 18px;
   float: left;
   background: url("../images/icon/icon_rem2.png") no-repeat;
+  margin-right: 8px;
 }
 .payment .payment-tab .tab-content .usermsg-hint .hint-text {
-  height: 20px;
   color: #7F7E7E;
-  line-height: 22px;
   font-size: 13px;
   -webkit-box-flex: 1;
       -ms-flex: 1;
@@ -1299,6 +1296,9 @@ li {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   position: relative;
+  /*已转账*/
+  /*未转账*/
+  /*重复点击*/
 }
 .main-mask .wrap .remit-modal .model-close {
   position: relative;
@@ -1442,6 +1442,13 @@ li {
   color: #999999;
   right: 0;
 }
+.main-mask .wrap .remit-modal .repeat-click {
+  height: 50%;
+  top: 50px;
+}
+.main-mask .wrap .remit-modal .repeat-click p {
+  color: red;
+}
 /*支付方式*/
 .payment {
   /*服务商信息 PC*/
@@ -1550,10 +1557,12 @@ li {
   .merchant-header .header-content .already-gathering .countdown-icon {
     width: 60px;
     height: 60px;
-    margin-right: 11px;
+    margin-right: 10px;
+    margin-top: 0;
   }
   .merchant-header .header-content .already-gathering .countdown-text {
     font-size: 24px;
+    line-height: 60px;
   }
   /*PC端-主要-顶部的内容*/
   .merchant-msg {
@@ -1709,9 +1718,6 @@ li {
     padding: 40px;
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
-  }
-  .guarantee .guarantee-item .item-content {
-    width: 240px;
   }
   .guarantee .guarantee-item .item-content .content-icon {
     width: 88px;

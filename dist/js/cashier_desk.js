@@ -9,11 +9,9 @@ var app = new Vue({
     phoneNumber: '020-253 2564',
     vendorName: '商家1', // 商户名称
     USDTNumber: '46.33 USDT / ¥314.1', // USDT数量
-    isShowSkip: false, // 跳转至 USDT购买 页面
     clientInfo: 'lavender', // 客户信息
     payOrder: 'WIRES0022020209901', // 支付单号
-
-    orderError: true, // 订单错误提示
+    orderError: false, // 订单错误提示
     // 提示文本
     remitText: [{
       key: 0,
@@ -25,6 +23,8 @@ var app = new Vue({
       key: 2,
       value: '[10553] 您提交的订单参数错误'
     }],
+    isShowSkip: false, // 跳转至 USDT购买 页面
+
     payUSDT: '支付USDT',
     payUSDTEn: 'Pay USDT',
 
@@ -58,35 +58,35 @@ var app = new Vue({
     HasRemind: false, // 已提醒服务商收款
 
     isShowFacilitatorMsg: false, // 服务商信息显示和隐藏
-    isShowProgressOrder: false, // 服务商信息显示和隐藏
+    isShowProgressOrder: false, // 进行中的订单显示和隐藏
 
-    isShowInProgressOrder: false, // 是否显示移动端进行中的订单
-
-    /*提交次数多*/
-    moreSubmit: true
+    /*重复点击*/
+    isRepeatClick: false,
+    repeatText: '[10509]订单已经点击[我已向服务商转账], 请勿重复点击'
   },
 
   methods: {
+    /*支付方式切换*/
     tabHead: function tabHead(index) {
       this.paymentIndex = index;
     },
 
-    // 提示
-    isHasPayer: function isHasPayer() {
-      if (!this.goldenSum && !this.payerName) {
-        dialog(this, '请输入支付的金额或者付款人姓名');
-      }
-    },
-    // 已转账
-    haveTransferHandle: function haveTransferHandle() {
-      this.isRemind = true;
-      this.haveTransfer = true;
-    },
     // 未转账
     notTransferHandle: function notTransferHandle() {
       this.isRemind = true;
       this.notTransfer = true;
     },
+    // 已转账
+    haveTransferHandle: function haveTransferHandle() {
+      this.notTransfer = false;
+      this.haveTransfer = true;
+    },
+    // 重复点击
+    repeatClickHandle: function repeatClickHandle() {
+      this.isRepeatClick = true;
+      this.notTransfer = true;
+    },
+
     // 关闭提醒
     closeRemind: function closeRemind() {
       this.isRemind = false;
@@ -97,12 +97,12 @@ var app = new Vue({
       this.selectedBankIndex = index;
     },
 
-    // 服务商信息显示和隐藏
+    // 服务商信息 显示和隐藏
     showFacilitatorMsg: function showFacilitatorMsg() {
       this.isShowFacilitatorMsg = !this.isShowFacilitatorMsg;
     },
 
-    // 服务商信息显示和隐藏
+    // 进行中的订单 显示和隐藏
     showProgressOrder: function showProgressOrder() {
       this.isShowProgressOrder = !this.isShowProgressOrder;
     }

@@ -16,7 +16,9 @@
   <!--黄色主题-->
   <!--<link rel="stylesheet" href="css/yellow.css">-->
 
-  <script src="js/vue.js"></script>
+  <!--<script src="js/vue.js"></script>-->
+  <script src="https://cdn.bootcss.com/vue/2.6.8/vue.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
   <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
@@ -48,7 +50,7 @@
         <!--蒙版-->
         <div class="main-mask" v-if="isRemind">
           <div class="mask"></div>
-
+          <!--已转账-->
           <div class="wrap" v-if="haveTransfer">
             <div class="remit-modal">
               <div class="model-close">
@@ -66,11 +68,11 @@
                   该服务商平均确认时长 <span>00:00:00</span>
                 </p>
                 <a class="content-btn"
-                   href="javascript:;" @click="closeRemind">我知道了</a>
+                   href="javascript:;" @click="repeatClickHandle">我知道了</a>
               </div>
             </div>
           </div>
-
+          <!--未转账-->
           <div class="wrap" v-if="notTransfer">
             <div class="remit-modal">
               <div class="model-close">
@@ -81,17 +83,28 @@
                   <i class="untransfer-icon"></i>
                   <span class="untransfer-text">
                     若您尚未转账给服务商 请不要提醒服务商确认
-                    若您尚未转账给服务商 请不要提醒服务商确认
-                    若您尚未转账给服务商 请不要提醒服务商确认
                   </span>
                 </div>
                 <p class="untransfer-p">以免造成充值失败和不必要的纠纷。</p>
                 <div class="untransfer-btnwarp">
                   <a class="btn btn1"
-                     href="javascript:;" @click="closeRemind">确认已转账</a>
+                     href="javascript:;" @click="haveTransferHandle">确认已转账</a>
                   <a class="btn btn2"
                      href="javascript:;" @click="closeRemind">尚未转账</a>
                 </div>
+              </div>
+            </div>
+          </div>
+          <!--重复点击-->
+          <div class="wrap" v-if="isRepeatClick">
+            <div class="remit-modal">
+              <div class="model-close">
+                <i class="close-btn" @click="closeRemind"></i>
+              </div>
+              <div class="model-content repeat-click">
+                <p>{{repeatText}}</p>
+                <a class="content-btn"
+                   href="javascript:;" @click="closeRemind">确定</a>
               </div>
             </div>
           </div>
@@ -233,14 +246,15 @@
                    :class="overtime ? 'pay-overtime': ''">
                 <input class="btn1"
                        type="button" value="上一步">
-                <input class="btn2" @click="haveTransferHandle"
-                       type="submit" value="提醒服务商收款">
+                <input class="btn2" @click="notTransferHandle"
+                       type="button" value="提醒服务商收款">
               </div>
               <div class="hint-btn" v-show="HasRemind">
                 <input disabled="disabled"
                        type="button" value="已提醒服务商收款">
               </div>
             </div>
+
             <div class="tab-content" v-show="paymentIndex === 1">
               <div class="content-usermsg">
                 <div class="usermsg-hint">
@@ -272,8 +286,8 @@
                    :class="overtime ? 'pay-overtime': ''">
                 <input class="btn1"
                        type="button" value="上一步">
-                <input class="btn2" @click="haveTransferHandle"
-                       type="submit" value="提醒服务商收款">
+                <input class="btn2" @click="notTransferHandle"
+                       type="button" value="提醒服务商收款">
               </div>
               <div class="hint-btn" v-show="HasRemind">
                 <input disabled="disabled"
@@ -310,8 +324,8 @@
                    :class="overtime ? 'pay-overtime': ''">
                 <input class="btn1"
                        type="button" value="上一步">
-                <input class="btn2" @click="haveTransferHandle"
-                       type="submit" value="提醒服务商收款">
+                <input class="btn2" @click="notTransferHandle"
+                       type="button" value="提醒服务商收款">
               </div>
               <div class="hint-btn" v-show="HasRemind">
                 <input disabled="disabled"
@@ -593,8 +607,10 @@
     var $submit = $('.btn2');
 
     /*点击之后不能点击*/
-    /*$($submit).click(function () {
+    $($submit).click(function () {
+      // console.log(1111)
       $(this).attr('disabled', 'disabled');
-    })*/
+
+    })
   })
 </script>

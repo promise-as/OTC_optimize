@@ -43,7 +43,7 @@
     </div>
 
     <!-- 商户 -->
-    <form action="#" class="merchant-warp">
+    <form action="buy_USDT.html" class="merchant-warp">
       <div class="container">
         <div class="merchant-header">
           <div class="header-title">
@@ -211,11 +211,13 @@
 <script src="js/cashier_desk.js"></script>
 <script>
   $(function () {
-    var $submit = $('.submit')
-
-    /*点击之后不能点击*/
-    /*$($submit).click(function () {
-      $(this).attr('disabled', 'disabled');
-    })*/
+    $(".submit").click(function(){
+      if(window.confirm('是否确认向商户支付USDT')){
+        //点击确定的操作
+      }else{
+        //点击取消的操作
+        return false; // 阻止表单提交
+      }
+    })
   })
 </script>
