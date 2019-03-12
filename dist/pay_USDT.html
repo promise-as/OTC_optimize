@@ -192,7 +192,7 @@
     </footer>
   </div>
 
-  <!-- 跳转至 USDT购买 页面 -->
+  <!-- 跳转 USDT购买 -->
   <div class="skip" v-show="isShowSkip">
     <div class="mask"></div>
     <div class="wrap">
@@ -209,15 +209,15 @@
 
 </html>
 <script src="js/cashier_desk.js"></script>
+<script src="js/myDialog.js"></script>
 <script>
   $(function () {
-    $(".submit").click(function(){
-      if(window.confirm('是否确认向商户支付USDT')){
-        //点击确定的操作
-      }else{
-        //点击取消的操作
-        return false; // 阻止表单提交
-      }
-    })
+    var $submit = $('.submit');
+
+    /*点击之后不能点击*/
+    /*$($submit).click(function () {
+      // console.log(1111)
+      $(this).attr('disabled', 'disabled');
+    })*/
   })
 </script>

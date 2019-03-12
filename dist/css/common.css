@@ -1443,11 +1443,17 @@ li {
   right: 0;
 }
 .main-mask .wrap .remit-modal .repeat-click {
-  height: 50%;
-  top: 50px;
+  height: 70%;
+  top: 0;
+}
+.main-mask .wrap .remit-modal .repeat-click .repeat-icon {
+  display: block;
+  height: 81px;
+  background: url("../images/icon/icon_cw.png") no-repeat center;
+  margin-bottom: 18px;
 }
 .main-mask .wrap .remit-modal .repeat-click p {
-  color: red;
+  color: #999999;
 }
 /*支付方式*/
 .payment {

@@ -102,6 +102,7 @@
                 <i class="close-btn" @click="closeRemind"></i>
               </div>
               <div class="model-content repeat-click">
+                <i class="repeat-icon"></i>
                 <p>{{repeatText}}</p>
                 <a class="content-btn"
                    href="javascript:;" @click="closeRemind">确定</a>
@@ -610,7 +611,6 @@
     $($submit).click(function () {
       // console.log(1111)
       $(this).attr('disabled', 'disabled');
-
     })
   })
 </script>

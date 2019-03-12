@@ -53,7 +53,7 @@ var app = new Vue({
     ServiceTimes: '1000',
     AverageTotalAffirmTime: '00:05:00',
 
-    countdown: true, // 倒计时中
+    countdown: false, // 倒计时中
     overtime: false, // 支付已超时
     HasRemind: false, // 已提醒服务商收款
 
@@ -61,7 +61,7 @@ var app = new Vue({
     isShowProgressOrder: false, // 进行中的订单显示和隐藏
 
     /*重复点击*/
-    isRepeatClick: false,
+    isRepeatClick: true,
     repeatText: '[10509]订单已经点击[我已向服务商转账], 请勿重复点击'
   },
 
