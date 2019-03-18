@@ -7,10 +7,10 @@ var app = new Vue({
     logoText: '全球领先的数字资产兑换平台',
     logoTextEn: 'The world\'s leading digital asset exchange platform',
     phoneNumber: '020-253 2564',
-    vendorName: '商家1', // 商户名称
-    USDTNumber: '46.33 USDT / ¥314.1', // USDT数量
-    clientInfo: 'lavender', // 客户信息
-    payOrder: 'WIRES0022020209901', // 支付单号
+    // vendorName: '商家1', // 商户名称
+    // USDTNumber: '46.33 USDT / ¥314.1', // USDT数量
+    // clientInfo: 'lavender', // 客户信息
+    // payOrder: 'WIRES0022020209901', // 支付单号
     orderError: false, // 订单错误提示
     // 提示文本
     remitText: [{
@@ -27,6 +27,25 @@ var app = new Vue({
 
     payUSDT: '支付USDT',
     payUSDTEn: 'Pay USDT',
+    merchantName: '商户名称',
+    merchantNameEn: 'Merchant Name',
+    merchantNameValue: '商户1',
+    merchantNameValueEn: 'Merchant name 1',
+    USDTNumber: 'USDT数量',
+    USDTNumberEn: 'USDT Number',
+    USDTNumberValue: '46.33 USDT / ¥314.1',
+    payBtnValue: '确认向商户支付USDT',
+    payBtnValueEn: 'Confirm payment of USDT to merchant',
+    orderInfo: '订单信息',
+    orderInfoEn: 'Order Info',
+    clientInfo: '客户信息',
+    clientInfoEn: 'Order Info',
+    clientInfoValue: 'lavender',
+    paymentOrder: '支付单号',
+    paymentOrderEn: 'Payment Order',
+    paymentOrderValue: 'WIRES0022020209901',
+    otherOrder: '您还有以下进行中的订单',
+    otherOrderEn: 'You also have the following order in progress',
 
     /*购买USDT-数据*/
     buyUSDT: '购买USDT',
@@ -53,7 +72,7 @@ var app = new Vue({
     ServiceTimes: '1000',
     AverageTotalAffirmTime: '00:05:00',
 
-    countdown: false, // 倒计时中
+    countdown: true, // 倒计时中
     overtime: false, // 支付已超时
     HasRemind: false, // 已提醒服务商收款
 

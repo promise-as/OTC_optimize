@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html lang="utf-8">
+<head>
+  <meta charset="utf-8"/>
+  <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.7/css/bootstrap-dialog.min.css">
+
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+  <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+  <!--<script type="text/javascript" src="js/bootstrap-dialog.min.js"></script>-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.7/js/bootstrap-dialog.min.js"></script>
+  <script src="js/dialog.js"></script>
+  <title>BootstrapDialog examples</title>
+</head>
+<body>
+<section id="container">
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-3 col-sm-3 col-xs-6">
+        <input type="button" value="普通提示框" class="btn btn-primary" id="base_message"/>
+      </div>
+      <div class="col-md-3 col-sm-3 col-xs-6">
+        <input type="button" value="普通提示框-跳转页面" class="btn btn-primary" id="base_message_redirect"/>
+      </div>
+      <div class="col-md-3 col-sm-3 col-xs-6">
+        <input type="button" value="普通提示框-回调函数" class="btn btn-primary" id="base_message_callback"/>
+      </div>
+      <div class="col-md-3 col-sm-3 col-xs-6">
+        <input type="button" value="普通提示框-跳转页面+回调函数" class="btn btn-primary" id="base_message_redirect_callback"/>
+      </div>
+    </div>
+    <div class="row">&nbsp;</div>
+    <div class="row">
+      <div class="col-md-3 col-sm-3 col-xs-6">
+        <input type="button" value="模态提示-成功" class="btn btn-primary" id="base_dialog_suc"/>
+      </div>
+      <div class="col-md-3 col-sm-3 col-xs-6">
+        <input type="button" value="模态提示-警告" class="btn btn-primary" id="base_dialog_warn"/>
+      </div>
+      <div class="col-md-3 col-sm-3 col-xs-6">
+        <input type="button" value="普通提示框-失败" class="btn btn-primary" id="base_dialog_err"/>
+      </div>
+      <div class="col-md-3 col-sm-3 col-xs-6"></div>
+    </div>
+  </div>
+</section>
+</body>
+<script src="js/myDialog.js"></script>
+</html>

@@ -2,10 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>cashier desk</title>
+  <title>收银台</title>
   <meta name="viewport"
         content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.7/css/bootstrap-dialog.min.css">
   <link rel="stylesheet" href="css/common.css">
   <!--红色主题-->
   <!--<link rel="stylesheet" href="css/red.css">-->
@@ -16,10 +18,12 @@
   <!--黄色主题-->
   <!--<link rel="stylesheet" href="css/yellow.css">-->
 
-  <script src="js/vue.js"></script>
+  <script src="https://cdn.bootcss.com/vue/2.6.8/vue.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
   <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.7/js/bootstrap-dialog.min.js"></script>
+  <script src="js/dialog.js"></script>
 </head>
 
 <body>
@@ -31,7 +35,7 @@
       <div class="container">
         <a href="javascript:;" class="logo"></a>
 
-        <span class="logo-text">{{logoTextEn}}</span>
+        <span class="logo-text">{{logoText}}</span>
 
         <div class="phone">
           <i class="phone-icon"></i>
@@ -45,10 +49,10 @@
     <form action="#" class="merchant-warp">
       <div class="container">
 
-        <!--蒙版-->
+        <!--蒙版 已提醒服务商收款-->
         <div class="main-mask" v-if="isRemind">
           <div class="mask"></div>
-
+          <!--已转账-->
           <div class="wrap" v-if="haveTransfer">
             <div class="remit-modal">
               <div class="model-close">
@@ -58,19 +62,19 @@
                 <div class="content-remind">
                   <i class="has-remind"></i>
                   <span>
-                    The service provider has been reminded to collect
+                    已提醒服务商收款
                   </span>
                 </div>
                 <p>
-                  Please wait patiently for the service provider to confirm the payment information
-                  The average confirmation time of the service provider<span>00:00:00</span>
+                  请您耐心等待服务商确认收款信息
+                  该服务商平均确认时长 <span>00:00:00</span>
                 </p>
                 <a class="content-btn"
-                   href="javascript:;" @click="closeRemind">I know</a>
+                   href="javascript:;" @click="repeatClickHandle">我知道了</a>
               </div>
             </div>
           </div>
-
+          <!--未转账-->
           <div class="wrap" v-if="notTransfer">
             <div class="remit-modal">
               <div class="model-close">
@@ -80,17 +84,30 @@
                 <div class="content-remind">
                   <i class="untransfer-icon"></i>
                   <span class="untransfer-text">
-                    If you have not transferred to the service provider,
-                    please do not remind the service provider to confirm
+                    若您尚未转账给服务商 请不要提醒服务商确认
                   </span>
                 </div>
-                <p class="untransfer-p">In order to avoid top-up failure and unnecessary disputes</p>
+                <p class="untransfer-p">以免造成充值失败和不必要的纠纷。</p>
                 <div class="untransfer-btnwarp">
                   <a class="btn btn1"
-                     href="javascript:;" @click="closeRemind">Confirm transfer</a>
+                     href="javascript:;" @click="haveTransferHandle">确认已转账</a>
                   <a class="btn btn2"
-                     href="javascript:;" @click="closeRemind">Has yet to transfer</a>
+                     href="javascript:;" @click="closeRemind">尚未转账</a>
                 </div>
+              </div>
+            </div>
+          </div>
+          <!--重复点击-->
+          <div class="wrap" v-if="isRepeatClick">
+            <div class="remit-modal">
+              <div class="model-close">
+                <i class="close-btn" @click="closeRemind"></i>
+              </div>
+              <div class="model-content repeat-click">
+                <i class="repeat-icon"></i>
+                <p>{{repeatText}}</p>
+                <a class="content-btn"
+                   href="javascript:;" @click="closeRemind">确定</a>
               </div>
             </div>
           </div>
@@ -101,32 +118,30 @@
           <div class="header-content">
             <div class="content-sum">
               <label for="number">
-                <span>Pay Amount：</span>￥
-                <input type="text" id="number" v-model="payAmount">
+                <span>支付金额：</span>￥
+                <input type="text" id="number" value="6000">
               </label>
               <label for="payer">
-                <span>Payer：</span>
-                <input type="text" id="payer" value="zhangsan">
+                <span>付款人姓名：</span>
+                <input type="text" id="payer" value="张三">
               </label>
             </div>
 
             <!--支付倒计时-->
             <div class="pay-countdown" id="payCountdown" v-show="countdown">
-              <span class="countdown-text">Time left to pay：</span>
+              <span class="countdown-text">支付倒计时：</span>
               <span class="countdown-time" id="countDownTimer">15:00</span>
             </div>
             <div class="content-hint" v-show="countdown">
               <i class="hint-icon"></i>
-              <p>Tip：The
+              <p>温馨提示：您购买的
                 <strong class="show-hint">USDT</strong>
-                that you intend to purchase has been secured by
-                INFINITE PAY,please complete the payment</p>
-
+                已被平台锁定，服务商无法提走，请放心支付</p>
               <div class="remit-text">
                 <em class="triangle"></em>
-                USDT is a digital asset based on the Omni LayerProtocol published on the Bitcoin Blockchain.
-                Its biggest feature: a 1:1 anchor to the dollar, it is the world's most liquid cryptocurrency after bitcoin.
-                <strong class="fewer">fewer</strong>
+                USDT是基于在Bitcoin Blockchain上发布的Omni LayerProtocol的数字资产。
+                其最大的特点是：与美元1:1锚定，是全球流动性仅次于比特币的加密数字资产。
+                <strong class="fewer">收起</strong>
               </div>
             </div>
 
@@ -152,7 +167,7 @@
         <div class="payment">
           <div class="payment-header">
             <div class="header-title">
-              <span>Payment</span>
+              <span>支付方式</span>
             </div>
           </div>
 
@@ -162,7 +177,7 @@
               <!--银行, 支付宝, 微信-->
               <a class="head-item"
                  href="javascript:;"
-                 v-for="(item, index) in paymentEn"
+                 v-for="(item, index) in payment"
                  :class=" paymentIndex === index?'tab-active':''"
                  @click="tabHead(index)"
               >
@@ -175,45 +190,42 @@
               <div class="content-usermsg">
                 <div class="usermsg-hint">
                   <i class="hint-icon"></i>
-                  <p class="hint-text">Tip: Please
-                    <strong>transfer the exact shown amount to the payment details as below</strong></p>
+                  <p class="hint-text">提示：请您
+                    <strong>转帐至服务商银行账户</strong></p>
                 </div>
                 <li class="usermsg-detail">
                   <label for="username">
-                    <span>Account name：</span>
+                    <span>用户名：</span>
                     <input v-model="username" id="username">
                   </label>
-                  <input type="button" class="copy" value="Copy"
+                  <input type="button" class="copy" value="复制"
                          data-clipboard-target="#username"/>
                 </li>
                 <li class="usermsg-detail">
                   <label for="bank-info">
-                    <span>Bank msg：</span>
+                    <span>银行信息：</span>
                     <input v-model="bankInfo" id="bank-info">
                   </label>
-                  <input type="button" class="copy" value="Copy"
+                  <input type="button" class="copy" value="复制"
                          data-clipboard-target="#bank-info"/>
                 </li>
                 <li class="usermsg-detail">
                   <label for="bank-account">
-                    <span>Bank account：</span>
+                    <span>银行账号：</span>
                     <input v-model="bankAccount" id="bank-account">
                   </label>
-                  <input type="button" class="copy" value="Copy"
+                  <input type="button" class="copy" value="复制"
                          data-clipboard-target="#bank-account"/>
                 </li>
               </div>
               <div class="content-remark">
                 <div class="remark-detail">
                   <label class="detail" for="remark">
-                    <span>Transfer note code：</span>
+                    <span>转账备注码：</span>
                     <input type="text" id="remark"
                            v-model="TransferNoteCode">
                   </label>
-                  <p>
-                    Note the number when transferring money,
-                    so that the service provider can confirm it quickly
-                  </p>
+                  <p>转账时备注该号码，以便服务商快速确认。</p>
                 </div>
               </div>
               <!--银行种类-->
@@ -230,28 +242,29 @@
               <div class="usermsg-hint">
                 <i class="hint-icon"></i>
                 <p class="hint-text">
-                  Tips: Please click<strong>【I have paid seller】</strong>once the payment is completed。
+                  提示：支付完成后请点击<strong>【提醒服务商收款】</strong>按钮。
                 </p>
               </div>
               <div class="hint-btn" v-show="HasRemind === false"
                    :class="overtime ? 'pay-overtime': ''">
                 <input class="btn1"
-                       type="button" value="back">
-                <input class="btn2" @click="haveTransferHandle"
-                       type="submit" value="Remind the service provider to collect">
+                       type="button" value="上一步">
+                <input class="btn2"
+                       type="button" value="提醒服务商收款">
               </div>
               <div class="hint-btn" v-show="HasRemind">
                 <input disabled="disabled"
-                       type="button" value="The service provider has been reminded to collect">
+                       type="button" value="已提醒服务商收款">
               </div>
             </div>
+
             <div class="tab-content" v-show="paymentIndex === 1">
               <div class="content-usermsg">
                 <div class="usermsg-hint">
                   <i class="hint-icon"></i>
-                  <p class="hint-text">Tip: If the transaction amount
-                    <strong>More than RMB 50000</strong>，please use
-                    <strong>bank transfer </strong>the mode of payment.</p>
+                  <p class="hint-text">提示：若交易金额
+                    <strong>大于￥50000</strong>，请使用
+                    <strong>银行转账</strong>方式付款。</p>
                 </div>
 
                 <!--支付宝二维码-->
@@ -259,8 +272,8 @@
                   <i class="alipay-icon"></i>
                   <div class="alipay-text">
                     <i class="scan"></i>
-                    <span>Open mobile alipay</span><br/>
-                    <span>So scan keeps paying</span>
+                    <span>打开手机支付宝</span><br/>
+                    <span>扫一扫继续支付</span>
                   </div>
                 </div>
               </div>
@@ -268,30 +281,30 @@
               <div class="usermsg-hint">
                 <i class="hint-icon"></i>
                 <p class="hint-text">
-                  Tip: Click after payment is completed
-                  <strong>【remind the service provider to collect】</strong>button。
+                  提示：支付完成后请点击<strong>【提醒服务商收款】</strong>按钮。
                 </p>
               </div>
 
               <div class="hint-btn alipay-btn" v-show="HasRemind === false"
                    :class="overtime ? 'pay-overtime': ''">
                 <input class="btn1"
-                       type="button" value="back">
-                <input class="btn2" @click="haveTransferHandle"
-                       type="submit" value="Remind the service provider to collect">
+                       type="button" value="上一步">
+                <input class="btn2"
+                       type="button" value="提醒服务商收款">
               </div>
               <div class="hint-btn" v-show="HasRemind">
                 <input disabled="disabled"
-                       type="button" value="The service provider has been reminded to collect">
+                       type="button" value="已提醒服务商收款">
               </div>
             </div>
+
             <div class="tab-content" v-show="paymentIndex === 2">
               <div class="content-usermsg">
                 <div class="usermsg-hint">
                   <i class="hint-icon"></i>
-                  <p class="hint-text">Tip: If the transaction amount
-                    <strong>More than RMB 50000</strong>，please use
-                    <strong>bank transfer </strong>the mode of payment.</p>
+                  <p class="hint-text">提示：若交易金额
+                    <strong>大于￥50000</strong>，请使用
+                    <strong>银行转账</strong>方式付款。</p>
                 </div>
 
                 <!--微信二维码-->
@@ -299,8 +312,8 @@
                   <i class="alipay-icon"></i>
                   <div class="alipay-text">
                     <i class="scan"></i>
-                    <span>Turn on your WeChat</span><br/>
-                    <span>So scan keeps paying</span>
+                    <span>打开手机微信</span><br/>
+                    <span>扫一扫继续支付</span>
                   </div>
                 </div>
               </div>
@@ -308,19 +321,19 @@
               <div class="usermsg-hint">
                 <i class="hint-icon"></i>
                 <p class="hint-text">
-                  Tip: Click after payment is completed
-                  <strong>【remind the service provider to collect】</strong>button。
+                  提示：支付完成后请点击<strong>【提醒服务商收款】</strong>按钮。
+                </p>
               </div>
               <div class="hint-btn alipay-btn" v-show="HasRemind === false"
                    :class="overtime ? 'pay-overtime': ''">
                 <input class="btn1"
-                       type="button" value="back">
-                <input class="btn2" @click="haveTransferHandle"
-                       type="submit" value="Remind the service provider to collect">
+                       type="button" value="上一步">
+                <input class="btn2"
+                       type="button" value="提醒服务商收款">
               </div>
               <div class="hint-btn" v-show="HasRemind">
                 <input disabled="disabled"
-                       type="button" value="The service provider has been reminded to collect">
+                       type="button" value="已提醒服务商收款">
               </div>
             </div>
 
@@ -330,7 +343,7 @@
           <div class="facilitator-msg">
             <div class="payment-header">
               <div class="header-title">
-                <span>Service provider information</span>
+                <span>服务商信息</span>
 
                 <i class="content-icon"></i>
                 <i class="content-icon"></i>
@@ -340,19 +353,19 @@
             <div class="facilitator-content">
               <li>
                 <label for="pc-golden1">
-                  <span>Name of service provider：</span>
+                  <span>服务商名称：</span>
                   <input type="text" v-model="operatorName" id="pc-golden1">
                 </label>
               </li>
               <li>
                 <label for="pc-golden2">
-                  <span>Service times：</span>
+                  <span>服务次数：</span>
                   <input type="text" v-model="ServiceTimes" id="pc-golden2">
                 </label>
               </li>
               <li>
                 <label for="pc-golden3">
-                  <span>Mean confirmation time：</span>
+                  <span>平均确认时长：</span>
                   <input type="text" v-model="AverageTotalAffirmTime" id="pc-golden3">
                 </label>
               </li>
@@ -363,24 +376,24 @@
           <div class="main-remind">
             <div class="payment-header">
               <div class="header-title">
-                <span>Pay to remind</span>
+                <span>支付提醒</span>
               </div>
             </div>
 
             <div class="remind-content">
               <p>
-                1、Please use real-name bank card, alipay, WeChat, etc. to transfer money.
+                1、请使用实名制的银行卡、支付宝、微信等进行转账。
               </p>
               <p>
-                2、If the transaction amount is greater than RMB 50,000,
-                The remittance to the bank card after 17:00 on legal holidays or working days may be delayed.
-                Please pay in batches (the single payment amount is less than RMB 50,000) to ensure timely arrival of the account.
-                If the account is not received in time, the service provider has the right to refuse.
+                2、若交易金额大于￥50000，
+                法定节假日或工作日17:00点以后汇款到银行卡可能造成汇款不及时，
+                请分批支付（单笔支付金额小于￥50000）保证及时到账，
+                若未及时到账，服务商有权拒绝。
               </p>
               <p>
-                3、12am to 6am May cause the service provider to confirm the delay in receiving the account.
-                Please try to transfer money in other time,
-                The service provider shall not be responsible for any delay in confirmation caused by the transfer within this period.
+                3、凌晨12点到早上6点可能会导致服务商确认到账延迟，
+                请尽量在其他时间内转账，
+                在此时间内转账造成的确认延迟引发的结果，服务商概不负责。
               </p>
             </div>
           </div>
@@ -390,24 +403,24 @@
         <div class="main-remind">
           <div class="payment-header">
             <div class="header-title">
-              <span>Pay to remind</span>
+              <span>支付提醒</span>
             </div>
           </div>
 
           <div class="remind-content">
             <p>
-              1、Please use real-name bank card, alipay, WeChat, etc. to transfer money.
+              1、请使用实名制的银行卡、支付宝、微信等进行转账。
             </p>
             <p>
-              2、If the transaction amount is greater than RMB 50,000,
-              The remittance to the bank card after 17:00 on legal holidays or working days may be delayed.
-              Please pay in batches (the single payment amount is less than RMB 50,000) to ensure timely arrival of the account.
-              If the account is not received in time, the service provider has the right to refuse.
+              2、若交易金额大于￥50000，
+              法定节假日或工作日17:00点以后汇款到银行卡可能造成汇款不及时，
+              请分批支付（单笔支付金额小于￥50000）保证及时到账，
+              若未及时到账，服务商有权拒绝。
             </p>
             <p>
-              3、12am to 6am May cause the service provider to confirm the delay in receiving the account.
-              Please try to transfer money in other time,
-              The service provider shall not be responsible for any delay in confirmation caused by the transfer within this period.
+              3、凌晨12点到早上6点可能会导致服务商确认到账延迟，
+              请尽量在其他时间内转账，
+              在此时间内转账造成的确认延迟引发的结果，服务商概不负责。
             </p>
           </div>
         </div>
@@ -416,7 +429,7 @@
         <div class="facilitator-msg">
           <div class="payment-header" @click="showFacilitatorMsg">
             <div class="header-title">
-              <span>Service provider information</span>
+              <span>服务商信息</span>
               <em class="unfold"
                   :class="isShowFacilitatorMsg === true ? 'show': ''"
               ></em>
@@ -428,19 +441,19 @@
           <div class="facilitator-content" v-show="isShowFacilitatorMsg">
             <li>
               <label for="golden1">
-                <span>Name of service provider：</span>
+                <span>服务商名称：</span>
                 <input type="text" v-model="operatorName" id="golden1">
               </label>
             </li>
             <li>
               <label for="golden2">
-                <span>Service times：</span>
+                <span>服务次数：</span>
                 <input type="text" v-model="ServiceTimes" id="golden2">
               </label>
             </li>
             <li>
               <label for="golden3">
-                <span>Mean confirmation time：</span>
+                <span>平均确认时长：</span>
                 <input type="text" v-model="AverageTotalAffirmTime" id="golden3">
               </label>
             </li>
@@ -454,18 +467,18 @@
       <div class="container">
         <div class="order-header">
           <div class="header-title">
-            <span>You also have the following order in progress</span>
+            <span>您还有以下进行中的订单</span>
           </div>
         </div>
         <!-- 进行中的订单 tab -->
         <div class="order-tab">
           <li class="row tab-head">
-            <div class="col-xs-3 col-md-4">pay for the order</div>
-            <div class="col-xs-3 col-md-2">time</div>
-            <div class="col-xs-3 col-md-2">USDT number</div>
-            <div class="col-md-1">currency</div>
-            <div class="col-md-1">money</div>
-            <div class="col-xs-3 col-md-2">swarm</div>
+            <div class="col-xs-3 col-md-4">支付订单</div>
+            <div class="col-xs-3 col-md-2">时间</div>
+            <div class="col-xs-3 col-md-2">USDT数量</div>
+            <div class="col-md-1">币种</div>
+            <div class="col-md-1">金额</div>
+            <div class="col-xs-3 col-md-2">相关操作</div>
           </li>
           <li class="row tab-content">
             <div class="col-xs-3 col-md-4">
@@ -476,7 +489,7 @@
             <div class="col-md-1">CNY</div>
             <div class="col-md-1">314.5</div>
             <div class="col-xs-3 col-md-2">
-              <div class="examine">examine</div>
+              <div class="examine">查看</div>
             </div>
           </li>
         </div>
@@ -488,7 +501,7 @@
       <div class="container">
         <div class="order-header" @click="showProgressOrder">
           <div class="header-title">
-            <span>You also have the following order in progress</span>
+            <span>您还有以下进行中的订单</span>
 
             <em class="unfold"
                 :class="isShowProgressOrder === true ? 'show': ''"
@@ -498,12 +511,12 @@
         <!-- 进行中的订单 tab -->
         <div class="order-tab" v-show="isShowProgressOrder">
           <li class="row tab-head">
-            <div class="col-xs-3 col-md-4">pay for the order</div>
-            <div class="col-xs-3 col-md-2">time</div>
-            <div class="col-xs-3 col-md-2">USDT number</div>
-            <div class="col-md-1">currency</div>
-            <div class="col-md-1">money</div>
-            <div class="col-xs-3 col-md-2">swarm</div>
+            <div class="col-xs-3 col-md-4">支付订单</div>
+            <div class="col-xs-3 col-md-2">时间</div>
+            <div class="col-xs-3 col-md-2">USDT数量</div>
+            <div class="col-md-1">币种</div>
+            <div class="col-md-2">金额</div>
+            <div class="col-xs-3 col-md-2">相关操作</div>
           </li>
           <li class="row tab-content">
             <div class="col-xs-3 col-md-4">
@@ -514,8 +527,9 @@
             <div class="col-md-1">CNY</div>
             <div class="col-md-1">314.5</div>
             <div class="col-xs-3 col-md-2">
-              <div class="examine">examine</div>
+              <div class="examine">查看</div>
             </div>
+          </li>
         </div>
       </div>
     </div>
@@ -528,9 +542,9 @@
             <div class="item-content">
               <div class="content-icon"></div>
               <div class="content-detail">
-                <div class="detail-title">Joint guarantee</div>
+                <div class="detail-title">联合担保</div>
                 <p class="detail-text">
-                  The deal is jointly guaranteed by COINPAY and the service provider
+                  本次交易由COINPAY和服务商提供联合担保
                 </p>
               </div>
             </div>
@@ -539,9 +553,9 @@
             <div class="item-content">
               <div class="content-icon"></div>
               <div class="content-detail">
-                <div class="detail-title">Security deposit</div>
+                <div class="detail-title">保证金</div>
                 <p class="detail-text">
-                  The service provider has paid the full deposit to COINPAY
+                  服务商已向COINPAY缴纳足额保证金
                 </p>
               </div>
             </div>
@@ -551,10 +565,10 @@
               <div class="content-icon"></div>
               <div class="content-detail">
                 <div class="detail-title">
-                  Managed to lock
+                  托管锁定
                 </div>
                 <p class="detail-text">
-                  USDT for sale has been managed and locked in COINPAY
+                  服务商出售USDT已托管锁定在COINPAY
                 </p>
               </div>
             </div>
@@ -594,11 +608,11 @@
       $($showText).css('display', 'none')
     })
 
-    var $submit = $('.btn2');
-
-    /*点击之后不能点击*/
-    /*$($submit).click(function () {
+    /*prompt操作*/
+    $(".btn2").click(function () {
+      HSJ.util.alert.common({status: "success", message: "已提醒服务商收款"});
+      /*点击之后不能点击*/
       $(this).attr('disabled', 'disabled');
-    })*/
+    })
   })
 </script>
